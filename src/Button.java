@@ -6,6 +6,10 @@ public class Button {
     private Image i;
 
     public Button(int x, int y, int width, int height ) {
+
+        int cornerX = x - width/2;
+        int cornerY = y + height/2;
+
         this.x = x;
         this.y = y;
         this.width = width;

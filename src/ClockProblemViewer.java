@@ -20,6 +20,6 @@ public class ClockProblemViewer extends JFrame {
 
     @Override
     public void paint(Graphics g) {
-        c.getRoot().draw(g,this);
+        c.getCurrentScreen().draw(g,this);
     }
 }

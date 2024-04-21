@@ -7,7 +7,7 @@ public class Screen {
 
     Button[] b;
 
-    public Screen(int sSize, int bSize, Image i, Screen sc) {
+    public Screen(int sSize, Image i, Screen sc) {
         s = new Screen[sSize];
         this.i = i;
         parent = sc;
