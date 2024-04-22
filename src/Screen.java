@@ -1,18 +1,29 @@
 import java.awt.*;
 
 public class Screen {
-    Image i;
-    Screen[] s;
-    Screen parent;
+    private  Image i;
+    private  Screen[] s;
+    private Screen parent;
+    private Button[] b;
+    private int inputArgs;
 
-    Button[] b;
 
-    public Screen(int sSize, Image i, Screen sc) {
+    public Screen(int sSize, Image i, Screen sc, int args) {
         s = new Screen[sSize];
         this.i = i;
         parent = sc;
+        inputArgs = args;
 
     }
+
+    public int getInputArgs() {
+        return inputArgs;
+    }
+
+    public void setInputArgs(int inputArgs) {
+        this.inputArgs = inputArgs;
+    }
+
     public void addButtons(Button[] b) {
         this.b = b;
     }

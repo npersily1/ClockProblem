@@ -11,8 +11,10 @@ public class ClockProblem implements KeyListener, MouseListener {
 
     private Screen root;
     private Screen currentScreen;
+    private String input;
 
     public ClockProblem() {
+        input = "";
         initScreens();
         currentScreen = root;
         window = new ClockProblemViewer(this);
@@ -38,8 +40,8 @@ public class ClockProblem implements KeyListener, MouseListener {
     }
 
     public void initScreens() {
-        root = new Screen(1, new ImageIcon("Resources/title.png").getImage(), null);
-        Screen options = new Screen(4, new ImageIcon("Resources/options.png").getImage(), root);
+        root = new Screen(1, new ImageIcon("Resources/title.png").getImage(), null, 0);
+        Screen options = new Screen(4, new ImageIcon("Resources/options.png").getImage(), root, 0);
 
         Button b = new Button(279, 442, 443, 113);
         Button[] bArr = new Button[1];
@@ -50,20 +52,20 @@ public class ClockProblem implements KeyListener, MouseListener {
         s[0] = options;
         root.setS(s);
 
-        Screen minutes = new Screen(1, new ImageIcon("Resources/input1.png").getImage(), options);
+        Screen minutes = new Screen(1, new ImageIcon("Resources/input1.png").getImage(), options, 4);
         // Continue
         bArr = new Button[1];
         bArr[0] = new Button(351, 519, 261, 74);
         minutes.setB(bArr);
 
-        Screen seconds = new Screen(1, new ImageIcon("Resources/input2.png").getImage(), options);
+        Screen seconds = new Screen(1, new ImageIcon("Resources/input2.png").getImage(), options, 6);
         bArr = new Button[1];
         bArr[0] = new Button(369, 519, 262, 75);
         seconds.setB(bArr);
 
         Screen overlap = minutes;
 
-        Screen warning = new Screen(1, new ImageIcon("Resources/warning.png").getImage(), options);
+        Screen warning = new Screen(1, new ImageIcon("Resources/warning.png").getImage(), options, 0);
         bArr = new Button[1];
         bArr[0] = new Button(405, 440, 232, 121);
         warning.setB(bArr);
@@ -86,17 +88,34 @@ public class ClockProblem implements KeyListener, MouseListener {
         s[3] = warning;
         options.setS(s);
 
-        Screen spider = new Screen(1,  new ImageIcon("Resources/input3.png").getImage(), warning);
+        Screen spider = new Screen(1, new ImageIcon("Resources/input3.png").getImage(), warning, 5);
         s = new Screen[1];
         s[0] = spider;
         warning.setS(s);
         bArr = new Button[1];
-        b = new Button(520,560,180,51);
+        b = new Button(520, 560, 180, 51);
         bArr[0] = b;
     }
 
     @Override
     public void keyTyped(KeyEvent e) {
+
+        if (currentScreen.getInputArgs() == 0) {
+            System.out.println("wrong screen");
+            return;
+        }
+
+        if (input.length() >= currentScreen.getInputArgs() * 2) {
+            System.out.println("overboard");
+            return;
+
+        }
+
+        if (isNumber(e.getKeyChar())) {
+            input += e.getKeyChar();
+        } else {
+            System.out.println("monkey");
+        }
 
     }
 
@@ -133,7 +152,6 @@ public class ClockProblem implements KeyListener, MouseListener {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-
     }
 
     @Override
@@ -144,6 +162,17 @@ public class ClockProblem implements KeyListener, MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
 
+    }
+
+    public boolean isNumber(char c) {
+        String s = "" + c;
+        for (int i = 0; i < 10; i++) {
+
+            if (s.equals("" + i)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static void main(String[] args) {
