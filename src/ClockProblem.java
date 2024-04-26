@@ -1,12 +1,11 @@
 import javax.swing.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 
-public class ClockProblem implements KeyListener, MouseListener {
+public class ClockProblem implements KeyListener, MouseListener, ActionListener {
 
     public final static Button UNDO = new Button(11, 526, 69, 67);
+
+    public final static Button[] OOB = new Button[]{new Button(10000,10000,0,0)};
     private ClockProblemViewer window;
 
     private Screen root;
@@ -95,6 +94,18 @@ public class ClockProblem implements KeyListener, MouseListener {
         bArr = new Button[1];
         b = new Button(520, 560, 180, 51);
         bArr[0] = b;
+
+        Screen trial = new Screen(0, new ImageIcon("Resources/TrialClock.png").getImage(), minutes, 0, true);
+        s = new Screen[1];
+        s[0] = trial;
+        minutes.setS(s);
+        trial.setB(new Button[1]);
+    }
+    public boolean checkInput() {
+        if(input.length() == currentScreen.getInputArgs() * 2) {
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -104,9 +115,14 @@ public class ClockProblem implements KeyListener, MouseListener {
             System.out.println("wrong screen");
             return;
         }
+//        System.out.println(e.getKeyCode());
+//        if (e.getKeyCh() == KeyEvent.) {
+//            input = input.substring(0, input.length() - 1);
+//        }
 
-        if (input.length() >= currentScreen.getInputArgs() * 2) {
+        if (input.length()  >= currentScreen.getInputArgs() * 2) {
             System.out.println("overboard");
+            window.repaint();
             return;
 
         }
@@ -116,6 +132,8 @@ public class ClockProblem implements KeyListener, MouseListener {
         } else {
             System.out.println("monkey");
         }
+        System.out.println(input.length());
+        window.repaint();
 
     }
 
@@ -137,10 +155,21 @@ public class ClockProblem implements KeyListener, MouseListener {
     @Override
     public void mousePressed(MouseEvent e) {
         System.out.println("stuff");
+        if(currentScreen.getParent() == root.getS()[0] || root.getS()[0].getS()[3] == currentScreen.getParent()) {
+            if (currentScreen.getB()[0].isClicked(e.getX(), e.getY()) && checkInput()) {
+                currentScreen = currentScreen.getS()[0];
+                window.repaint();
+            }
+        }
+        if(currentScreen.isLeaf() && UNDO.isClicked(e.getX(), e.getY())) {
+            input = "";
+        }
+
         for (int i = 0; i < currentScreen.getB().length; i++) {
             if (currentScreen.getB()[i].isClicked(e.getX(), e.getY())) {
                 currentScreen = currentScreen.getS()[i];
                 window.repaint();
+                break;
             }
         }
         if (UNDO.isClicked(e.getX(), e.getY()) && currentScreen != root) {
@@ -175,9 +204,36 @@ public class ClockProblem implements KeyListener, MouseListener {
         return false;
     }
 
+    public String getInput() {
+        return input;
+    }
+
+    public void setInput(String input) {
+        this.input = input;
+    }
+
+    public Clock makeClock() {
+
+
+        return new Clock(Integer.parseInt(input.substring(0,2)), Integer.parseInt(input.substring(2,4)), Integer.parseInt(input.substring(4,6)), Integer.parseInt(input.substring(6,8)));
+    }
+    // I know there is another pow class, but it was working weird so I just made it
+    public int pow(int B, int E) {
+        int total = B;
+        for (int i = 0; i < E - 1; i++) {
+            total *= B;
+        }
+        return total;
+
+    }
+
     public static void main(String[] args) {
         ClockProblem c = new ClockProblem();
 
     }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        window.repaint();
+    }
 }

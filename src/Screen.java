@@ -6,6 +6,7 @@ public class Screen {
     private Screen parent;
     private Button[] b;
     private int inputArgs;
+    private boolean isLeaf;
 
 
     public Screen(int sSize, Image i, Screen sc, int args) {
@@ -13,7 +14,24 @@ public class Screen {
         this.i = i;
         parent = sc;
         inputArgs = args;
+        isLeaf = false;
 
+    }
+    public Screen(int sSize, Image i, Screen sc, int args, boolean b) {
+        s = new Screen[sSize];
+        this.i = i;
+        parent = sc;
+        inputArgs = args;
+        isLeaf = b;
+
+    }
+
+    public boolean isLeaf() {
+        return isLeaf;
+    }
+
+    public void setLeaf(boolean leaf) {
+        isLeaf = leaf;
     }
 
     public int getInputArgs() {
