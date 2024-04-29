@@ -1,45 +1,79 @@
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 public class Clock {
 
-    private int totalh, totalm, totals,  currentHours, currentMinutes, currentSeconds, rateOfChange;
-    private Rectangle2D r;
+    private int totalh, totalm, totals,  currentHours, currentMinutes, currentSeconds, rate;
+    private double degreesPerMinute, degressPerHour, hourPerMinute;
+
+    private boolean isWhite;
 
     public Clock(int totalm, int totalh,  int currentMinutes, int currentHours) {
         this.totalh = totalh;
         this.totalm = totalm;
-        this.totals = 0;
         this.currentHours = currentHours;
         this.currentMinutes = currentMinutes;
-        this.currentSeconds = 0;
+        setRates();
+
+
     }
 
-//    public double getAnswer(int i) {
-//        if(i == 0) {
-//            return getInbetweenMins()
-//        }
-//        if(i == 1) {
-//            return 0.0;
-//        }
-    //}//
+    public Clock(int totalh, int totalm, int currentHours, int currentMinutes, int rate) {
+        this.totalh = totalh;
+        this.totalm = totalm;
+        this.currentHours = currentHours;
+        this.currentMinutes = currentMinutes;
+        this.rate = rate;
+        setRates();
+    }
+
+    public void setRates() {
+        degressPerHour = 360.0 / totalh;
+        degreesPerMinute = 360.0 / totalm;
+        hourPerMinute = degressPerHour / totalm;
+    }
+
 
     public double getInbetweenMins() {
 
-        double baseH = currentHours * 360.0 / totalh;
-        double hPos = baseH + (360.0 / totalh / totalm * currentMinutes);
-        double mPos = currentMinutes * 360.0 / totalm;
-
+        double hPos = currentHours * degressPerHour + hourPerMinute * currentMinutes;
+        double mPos = currentMinutes * degreesPerMinute;
         return Math.abs(hPos - mPos);
 
     }
-    //https://stackoverflow.com/questions/7517688/rotate-a-java-graphics2d-rectangle
+    public double getOverlap() {
+        return getInbetweenMins() / (degreesPerMinute - hourPerMinute);
+    }
+    public double getSpider() {
+        isWhite = true;
+        return getInbetweenMins() / (degreesPerMinute - (hourPerMinute * rate));
+    }
+
     public void draw(Graphics g, ClockProblemViewer c) {
 
         Graphics2D g2d = (Graphics2D)g;
-        g2d.fillRect(700,400,10,100);
-        g2d.rotate(Math.toRadians(45));
+//        if (isWhite) g.setColor(Color.WHITE);
+//        else g.setColor(Color.BLACK);
+
+        AffineTransform original = g2d.getTransform();
+
+        Rectangle2D.Double mh = new Rectangle2D.Double(766.5, 150, 10, 150);
+
+        g2d.rotate(Math.toRadians(currentMinutes * degreesPerMinute), 776.5, 300);
+        g2d.fill(mh);
+        g2d.setTransform(original);
+
+        Rectangle2D.Double hh = new Rectangle2D.Double(766.5, 225, 10, 75);
+
+        g2d.rotate(Math.toRadians(currentHours * degressPerHour + hourPerMinute * currentMinutes), 776.5, 300);
+        g2d.fill(hh);
+        g2d.setTransform(original);
+
+        Ellipse2D.Double middle = new Ellipse2D.Double(758.5,285,30,30);
+        g2d.fill(middle);
     }
 
 

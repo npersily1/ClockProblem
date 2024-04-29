@@ -23,22 +23,22 @@ public class ClockProblemViewer extends JFrame {
         c.getCurrentScreen().draw(g,this);
 
         if(c.getCurrentScreen().isLeaf() ) {
+        //    if(c.getCurrentScreen() == c.getRoot().getS()[3].getS()[0].getS()[0]) g.setColor(Color.WHITE); else g.setColor(Color.BLACK);
             Clock c = this.c.makeClock();
+            g.drawString(String.format("%.2f", this.c.getVal(c)), 400, 300 );
             c.draw(g,this);
-            g.drawString("" + c.getInbetweenMins(), 500, 300 );
         }
         if(c.getCurrentScreen().getParent() == c.getRoot().getS()[0] || c.getRoot().getS()[0].getS()[3] == c.getCurrentScreen().getParent()) {
-            int length = c.getInput().length()/2;
-            if(c.getInput().length() % 2  == 1) { length++; }
+            int y = -10;
+            int[] x = {750,760};
 
+            if(c.getCurrentScreen() == c.getRoot().getS()[0].getS()[3].getS()[0]) g.setColor(Color.WHITE); else g.setColor(Color.BLACK);
 
-            int counter = 0;
-            int y = 100;
-            g.setColor(Color.BLACK);
-            for (int i = 0; i < length; i++) {
-                g.drawString(c.getInput().substring(i,i+2), 700,y);
-                y+=100;
+            for (int i = 0; i < c.getInput().length(); i++) {
+                if((i % 2) == 0) y += 100;
+                g.drawString(c.getInput().substring(i, i + 1), x[i % 2], y);
             }
+
         }
     }
 }
