@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 
 public class Clock {
 
-    private int totalh, totalm, totals,  currentHours, currentMinutes, currentSeconds, rate;
+    private int totalh, totalm,  currentHours, currentMinutes,  rate;
     private double degreesPerMinute, degressPerHour, hourPerMinute;
 
     private boolean isWhite;
@@ -27,6 +27,7 @@ public class Clock {
         this.currentHours = currentHours;
         this.currentMinutes = currentMinutes;
         this.rate = rate;
+        isWhite = true;
         setRates();
     }
 
@@ -44,19 +45,26 @@ public class Clock {
         return Math.abs(hPos - mPos);
 
     }
+    private double getInbetweenMinsSpider() {
+
+        double hPos = currentHours * degressPerHour + hourPerMinute * currentMinutes;
+        double mPos = currentMinutes * degreesPerMinute;
+        return Math.abs(hPos - mPos);
+
+    }
     public double getOverlap() {
         return getInbetweenMins() / (degreesPerMinute - hourPerMinute);
     }
     public double getSpider() {
-        isWhite = true;
-        return getInbetweenMins() / (degreesPerMinute - (hourPerMinute * rate));
+
+        return getInbetweenMins() / (degreesPerMinute - (hourPerMinute * (rate / 100.0)));
     }
 
     public void draw(Graphics g, ClockProblemViewer c) {
 
         Graphics2D g2d = (Graphics2D)g;
-//        if (isWhite) g.setColor(Color.WHITE);
-//        else g.setColor(Color.BLACK);
+        if (isWhite) g.setColor(Color.WHITE);
+        else g.setColor(Color.BLACK);
 
         AffineTransform original = g2d.getTransform();
 
@@ -76,7 +84,13 @@ public class Clock {
         g2d.fill(middle);
     }
 
+    public boolean isWhite() {
+        return isWhite;
+    }
 
+    public void setWhite(boolean white) {
+        isWhite = white;
+    }
 
     public int getTotalh() {
         return totalh;
@@ -94,13 +108,6 @@ public class Clock {
         this.totalm = totalm;
     }
 
-    public int getTotals() {
-        return totals;
-    }
-
-    public void setTotals(int totals) {
-        this.totals = totals;
-    }
 
     public int getCurrentHours() {
         return currentHours;
@@ -118,11 +125,5 @@ public class Clock {
         this.currentMinutes = currentMinutes;
     }
 
-    public int getCurrentSeconds() {
-        return currentSeconds;
-    }
 
-    public void setCurrentSeconds(int currentSeconds) {
-        this.currentSeconds = currentSeconds;
-    }
 }

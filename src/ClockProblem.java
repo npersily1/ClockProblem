@@ -115,7 +115,7 @@ public class ClockProblem implements KeyListener, MouseListener, ActionListener 
         s = new Screen[1];
         s[0] = spiderTrial;
         spider.setS(s);
-        spider.setB(new Button[1]);
+
 
     }
 
@@ -133,10 +133,10 @@ public class ClockProblem implements KeyListener, MouseListener, ActionListener 
             System.out.println("wrong screen");
             return;
         }
-//        System.out.println(e.getKeyCode());
-//        if (e.getKeyCh() == KeyEvent.) {
-//            input = input.substring(0, input.length() - 1);
-//        }
+        if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+            input = input.substring(0, input.length() - 1);
+            window.repaint();
+        }
 
         if (input.length() >= currentScreen.getInputArgs() * 2) {
             System.out.println("overboard");

@@ -23,8 +23,8 @@ public class ClockProblemViewer extends JFrame {
         c.getCurrentScreen().draw(g,this);
 
         if(c.getCurrentScreen().isLeaf() ) {
-        //    if(c.getCurrentScreen() == c.getRoot().getS()[3].getS()[0].getS()[0]) g.setColor(Color.WHITE); else g.setColor(Color.BLACK);
             Clock c = this.c.makeClock();
+            if(c.isWhite()) g.setColor(Color.WHITE); else g.setColor(Color.BLACK);
             g.drawString(String.format("%.2f", this.c.getVal(c)), 400, 300 );
             c.draw(g,this);
         }
