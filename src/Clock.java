@@ -6,22 +6,30 @@ import java.awt.image.BufferedImage;
 
 public class Clock {
 
-    private int totalh, totalm,  currentHours, currentMinutes,  rate;
+    private int totalh, totalm, currentHours, currentMinutes, rate, diff;
     private double degreesPerMinute, degressPerHour, hourPerMinute;
 
     private boolean isWhite;
 
-    public Clock(int totalm, int totalh,  int currentMinutes, int currentHours) {
+    public Clock(int totalm, int totalh, int currentMinutes, int currentHours) {
         this.totalh = totalh;
         this.totalm = totalm;
         this.currentHours = currentHours;
         this.currentMinutes = currentMinutes;
         setRates();
 
+    }
+    public Clock(int totalm, int totalh, int currentMinutes, int currentHours, String s) {
+        this.totalh = totalh;
+        this.totalm = totalm;
+        this.currentHours = currentHours;
+        this.currentMinutes = currentMinutes;
+        diff = Integer.parseInt(s);
+        setRates();
 
     }
 
-    public Clock(int totalh, int totalm, int currentHours, int currentMinutes, int rate) {
+    public Clock(int totalm, int totalh, int currentMinutes, int currentHours, int rate) {
         this.totalh = totalh;
         this.totalm = totalm;
         this.currentHours = currentHours;
@@ -37,7 +45,6 @@ public class Clock {
         hourPerMinute = degressPerHour / totalm;
     }
 
-
     public double getInbetweenMins() {
 
         double hPos = currentHours * degressPerHour + hourPerMinute * currentMinutes;
@@ -45,24 +52,35 @@ public class Clock {
         return Math.abs(hPos - mPos);
 
     }
+
     private double getInbetweenMinsSpider() {
 
         double hPos = currentHours * degressPerHour + hourPerMinute * currentMinutes;
         double mPos = currentMinutes * degreesPerMinute;
-        return Math.abs(hPos - mPos);
+        return hPos - mPos;
 
     }
+
     public double getOverlap() {
         return getInbetweenMins() / (degreesPerMinute - hourPerMinute);
     }
-    public double getSpider() {
 
-        return getInbetweenMins() / (degreesPerMinute - (hourPerMinute * (rate / 100.0)));
+
+    public double getSpider() {
+        double diff = getInbetweenMinsSpider();
+        if (diff >= 0) {
+            return diff / (degreesPerMinute - (hourPerMinute * rate / 100.0));
+        }
+        return  (360 + diff) / degreesPerMinute - (hourPerMinute * rate / 100.0);
+    }
+    public diff() {
+        double ans1 = -1 * ((-diff - currentHours * degressPerHour) / (-1 * (currentMinutes * (degreesPerMinute - hourPerMinute)) - currentMinutes);
+        double ans2 =
     }
 
     public void draw(Graphics g, ClockProblemViewer c) {
 
-        Graphics2D g2d = (Graphics2D)g;
+        Graphics2D g2d = (Graphics2D) g;
         if (isWhite) g.setColor(Color.WHITE);
         else g.setColor(Color.BLACK);
 
@@ -80,7 +98,7 @@ public class Clock {
         g2d.fill(hh);
         g2d.setTransform(original);
 
-        Ellipse2D.Double middle = new Ellipse2D.Double(758.5,285,30,30);
+        Ellipse2D.Double middle = new Ellipse2D.Double(758.5, 285, 30, 30);
         g2d.fill(middle);
     }
 
@@ -108,7 +126,6 @@ public class Clock {
         this.totalm = totalm;
     }
 
-
     public int getCurrentHours() {
         return currentHours;
     }
@@ -124,6 +141,5 @@ public class Clock {
     public void setCurrentMinutes(int currentMinutes) {
         this.currentMinutes = currentMinutes;
     }
-
 
 }

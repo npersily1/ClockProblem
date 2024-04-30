@@ -255,11 +255,12 @@ public class ClockProblem implements KeyListener, MouseListener, ActionListener 
         if (currentScreen == root.getS()[0].getS()[2].getS()[0]) {
             return c.getOverlap();
         }
-        if (currentScreen == root.getS()[0].getS()[3].getS()[0]) {
+        if (currentScreen == root.getS()[0].getS()[3].getS()[0].getS()[0]) {
             return c.getSpider();
         }
         return 0;
     }
+
 
     public static void main(String[] args) {
         ClockProblem c = new ClockProblem();
