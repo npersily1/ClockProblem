@@ -133,10 +133,7 @@ public class ClockProblem implements KeyListener, MouseListener, ActionListener 
             System.out.println("wrong screen");
             return;
         }
-        if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
-            input = input.substring(0, input.length() - 1);
-            window.repaint();
-        }
+
 
         if (input.length() >= currentScreen.getInputArgs() * 2) {
             System.out.println("overboard");
@@ -162,7 +159,11 @@ public class ClockProblem implements KeyListener, MouseListener, ActionListener 
 
     @Override
     public void keyReleased(KeyEvent e) {
-
+        if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE && input.length() > 0 && (currentScreen.getParent() == root.getS()[0] || root.getS()[0].getS()[3] == currentScreen.getParent())){
+            System.out.println("deleted");
+            input = input.substring(0, input.length() - 1);
+            window.repaint();
+        }
     }
 
     @Override

@@ -73,10 +73,10 @@ public class Clock {
         }
         return  (360 + diff) / degreesPerMinute - (hourPerMinute * rate / 100.0);
     }
-    public diff() {
-        double ans1 = -1 * ((-diff - currentHours * degressPerHour) / (-1 * (currentMinutes * (degreesPerMinute - hourPerMinute)) - currentMinutes);
-        double ans2 =
-    }
+//    public diff() {
+//        double ans1 = -1 * ((-diff - currentHours * degressPerHour) / (-1 * (currentMinutes * (degreesPerMinute - hourPerMinute)) - currentMinutes);
+//        double ans2 =
+//    }
 
     public void draw(Graphics g, ClockProblemViewer c) {
 
