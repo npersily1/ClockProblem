@@ -5,12 +5,13 @@ public class ClockProblem implements KeyListener, MouseListener, ActionListener 
 
     public final static Button UNDO = new Button(11, 526, 69, 67);
 
-    public final static Button[] OOB = new Button[]{new Button(10000, 10000, 0, 0)};
     private ClockProblemViewer window;
 
     private Screen root;
     private Screen currentScreen;
     private String input;
+
+
 
     public ClockProblem() {
         input = "";
@@ -96,7 +97,7 @@ public class ClockProblem implements KeyListener, MouseListener, ActionListener 
         s[0] = spider;
         warning.setS(s);
         bArr = new Button[1];
-        b = new Button(200, 500, 800, 100);
+        b = new Button(521, 560, 181, 50);
         bArr[0] = b;
         spider.setB(bArr);
 
@@ -258,6 +259,9 @@ public class ClockProblem implements KeyListener, MouseListener, ActionListener 
         }
         if (currentScreen == root.getS()[0].getS()[3].getS()[0].getS()[0]) {
             return c.getSpider();
+        }
+        if (currentScreen == root.getS()[0].getS()[1].getS()[0].getS()[0]) {
+            return c.degrees();
         }
         return 0;
     }

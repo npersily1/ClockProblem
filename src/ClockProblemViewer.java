@@ -25,8 +25,15 @@ public class ClockProblemViewer extends JFrame {
         if(c.getCurrentScreen().isLeaf() ) {
             Clock c = this.c.makeClock();
             if(c.isWhite()) g.setColor(Color.WHITE); else g.setColor(Color.BLACK);
-            g.drawString(String.format("%.2f", this.c.getVal(c)), 400, 300 );
-            c.draw(g,this);
+            g.drawString(String.format("%.2f", this.c.getVal(c)), 300, 440 );
+            c.draw(g);
+            c.printRate(g);
+            if(c.isDegrees()) {
+                g.drawString("degrees", 350,440);
+            }
+            else {
+                g.drawString("minutes", 350,440);
+            }
         }
         if(c.getCurrentScreen().getParent() == c.getRoot().getS()[0] || c.getRoot().getS()[0].getS()[3] == c.getCurrentScreen().getParent()) {
             int y = -10;

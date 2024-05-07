@@ -8,41 +8,67 @@ public class Clock {
 
     private int totalh, totalm, currentHours, currentMinutes, rate, diff;
     private double degreesPerMinute, degressPerHour, hourPerMinute;
+    private double[] rates;
 
-    private boolean isWhite;
+    private boolean isWhite, isDegrees;
 
-    public Clock(int totalm, int totalh, int currentMinutes, int currentHours) {
+    public Clock(int totalh, int totalm, int currentHours, int currentMinutes) {
         this.totalh = totalh;
         this.totalm = totalm;
         this.currentHours = currentHours;
         this.currentMinutes = currentMinutes;
-        setRates();
-
-    }
-    public Clock(int totalm, int totalh, int currentMinutes, int currentHours, String s) {
-        this.totalh = totalh;
-        this.totalm = totalm;
-        this.currentHours = currentHours;
-        this.currentMinutes = currentMinutes;
-        diff = Integer.parseInt(s);
+        rates = new double[3];
         setRates();
 
     }
 
-    public Clock(int totalm, int totalh, int currentMinutes, int currentHours, int rate) {
+//    public Clock(int totalm, int totalh, int currentMinutes, int currentHours, String s) {
+//        this.totalh = totalh;
+//        this.totalm = totalm;
+//        this.currentHours = currentHours;
+//        this.currentMinutes = currentMinutes;
+//        diff = Integer.parseInt(s);
+//        setRates();
+//
+//    }
+
+    public Clock(int totalh, int totalm, int currentHours, int currentMinutes, int rate) {
         this.totalh = totalh;
         this.totalm = totalm;
         this.currentHours = currentHours;
         this.currentMinutes = currentMinutes;
         this.rate = rate;
+        rates = new double[3];
         isWhite = true;
         setRates();
     }
 
     public void setRates() {
         degressPerHour = 360.0 / totalh;
+
         degreesPerMinute = 360.0 / totalm;
         hourPerMinute = degressPerHour / totalm;
+
+        rates[0] = degreesPerMinute;
+        rates[1] = degressPerHour;
+        rates[2] = hourPerMinute;
+        if (isWhite) {
+            rates[2] = hourPerMinute * rate / 100.0;
+        }
+    }
+
+    public double degrees() {
+        if (getInbetweenMinsSpider() < 0 && getInbetweenMinsSpider() > -90) {
+
+            double total = getOverlap();
+            total += diff / (degreesPerMinute - hourPerMinute);
+            return total;
+        } else if (getInbetweenMinsSpider() > 0 & getInbetweenMinsSpider() < 90) {
+            double total = getInbetweenMins();
+            total += (diff - total) / (degreesPerMinute - hourPerMinute);
+            return total;
+        }
+        return (getInbetweenMins() - diff) / (degreesPerMinute - hourPerMinute);
     }
 
     public double getInbetweenMins() {
@@ -54,7 +80,7 @@ public class Clock {
     }
 
     private double getInbetweenMinsSpider() {
-
+        isDegrees = true;
         double hPos = currentHours * degressPerHour + hourPerMinute * currentMinutes;
         double mPos = currentMinutes * degreesPerMinute;
         return hPos - mPos;
@@ -62,23 +88,21 @@ public class Clock {
     }
 
     public double getOverlap() {
+        isDegrees = false;
         return getInbetweenMins() / (degreesPerMinute - hourPerMinute);
-    }
 
+    }
 
     public double getSpider() {
         double diff = getInbetweenMinsSpider();
         if (diff >= 0) {
             return diff / (degreesPerMinute - (hourPerMinute * rate / 100.0));
         }
-        return  (360 + diff) / degreesPerMinute - (hourPerMinute * rate / 100.0);
+        return (360 + diff) / degreesPerMinute - (hourPerMinute * rate / 100.0);
     }
-//    public diff() {
-//        double ans1 = -1 * ((-diff - currentHours * degressPerHour) / (-1 * (currentMinutes * (degreesPerMinute - hourPerMinute)) - currentMinutes);
-//        double ans2 =
-//    }
 
-    public void draw(Graphics g, ClockProblemViewer c) {
+
+    public void draw(Graphics g) {
 
         Graphics2D g2d = (Graphics2D) g;
         if (isWhite) g.setColor(Color.WHITE);
@@ -98,8 +122,15 @@ public class Clock {
         g2d.fill(hh);
         g2d.setTransform(original);
 
-        Ellipse2D.Double middle = new Ellipse2D.Double(758.5, 285, 30, 30);
+        Ellipse2D.Double middle = new Ellipse2D.Double(766.5, 285, 30, 30);
         g2d.fill(middle);
+    }
+
+    public void printRate(Graphics g) {
+        int y = 175;
+        int x = 400;
+        for (int i = 0; i < 3; i++) g.drawString(String.format("%2f", rates[i]), x, y + i * 90);
+
     }
 
     public boolean isWhite() {
@@ -142,4 +173,11 @@ public class Clock {
         this.currentMinutes = currentMinutes;
     }
 
+    public boolean isDegrees() {
+        return isDegrees;
+    }
+
+    public void setDegrees(boolean degrees) {
+        isDegrees = degrees;
+    }
 }
