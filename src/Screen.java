@@ -1,13 +1,12 @@
 import java.awt.*;
 
 public class Screen {
-    private  Image i;
-    private  Screen[] s;
+    private Image i;
+    private Screen[] s;
     private Screen parent;
     private Button[] b;
     private int inputArgs;
     private boolean isLeaf;
-
 
     public Screen(int sSize, Image i, Screen sc, int args) {
         s = new Screen[sSize];
@@ -17,6 +16,7 @@ public class Screen {
         isLeaf = false;
 
     }
+
     public Screen(int sSize, Image i, Screen sc, int args, boolean b) {
         s = new Screen[sSize];
         this.i = i;
@@ -25,14 +25,11 @@ public class Screen {
         isLeaf = b;
 
     }
+    // Getters and setters
 
-    public boolean isLeaf() {
-        return isLeaf;
-    }
+    public boolean isLeaf() { return isLeaf; }
 
-    public void setLeaf(boolean leaf) {
-        isLeaf = leaf;
-    }
+    public void setLeaf(boolean leaf) { isLeaf = leaf; }
 
     public int getInputArgs() {
         return inputArgs;
@@ -79,7 +76,7 @@ public class Screen {
     }
 
     public void draw(Graphics g, ClockProblemViewer c) {
-        g.drawImage(i,0,0, c);
+        g.drawImage(i, 0, 0, c);
     }
 
 }

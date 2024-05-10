@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.event.*;
 
-public class ClockProblem implements KeyListener, MouseListener, ActionListener {
+public class ClockProblem implements KeyListener, MouseListener {
 
     public final static Button UNDO = new Button(11, 526, 69, 67);
 
@@ -10,8 +10,6 @@ public class ClockProblem implements KeyListener, MouseListener, ActionListener 
     private Screen root;
     private Screen currentScreen;
     private String input;
-
-
 
     public ClockProblem() {
         input = "";
@@ -39,10 +37,12 @@ public class ClockProblem implements KeyListener, MouseListener, ActionListener 
         this.root = root;
     }
 
+    // Initializes a the tree of all different game states
     public void initScreens() {
+        // Makes title and options
         root = new Screen(1, new ImageIcon("Resources/title.png").getImage(), null, 0);
         Screen options = new Screen(4, new ImageIcon("Resources/options.png").getImage(), root, 0);
-
+        // Adds continue button and options screen to the Root
         Button b = new Button(279, 442, 443, 113);
         Button[] bArr = new Button[1];
         bArr[0] = b;
@@ -51,29 +51,36 @@ public class ClockProblem implements KeyListener, MouseListener, ActionListener 
         Screen[] s = new Screen[1];
         s[0] = options;
         root.setS(s);
+        // Makes all the different branches off of the the options screen and their respective continue buttons
 
+        // Regular Mode
         Screen minutes = new Screen(1, new ImageIcon("Resources/input1.png").getImage(), options, 4);
-        // Continue
         bArr = new Button[1];
         bArr[0] = new Button(351, 519, 261, 74);
         minutes.setB(bArr);
-
-        Screen seconds = new Screen(1, new ImageIcon("Resources/input2.png").getImage(), options, 6);
+        // Difference mode
+        Screen difference = new Screen(1, new ImageIcon("Resources/input2.png").getImage(), options, 5);
         bArr = new Button[1];
         bArr[0] = new Button(369, 519, 262, 75);
-        seconds.setB(bArr);
-
+        difference.setB(bArr);
+        // Clock
+        Screen thing = new Screen(0, new ImageIcon("Resources/TrialClock.png").getImage(), difference, 0, true);
+        Screen[] things = new Screen[1];
+        things[0] = thing;
+        difference.setS(things);
+        // Overlap mode
         Screen overlap = new Screen(1, new ImageIcon("Resources/input1.png").getImage(), options, 4);
         // Continue
         bArr = new Button[1];
         bArr[0] = new Button(351, 519, 261, 74);
         overlap.setB(bArr);
-
+        // Spider warning
         Screen warning = new Screen(1, new ImageIcon("Resources/warning.png").getImage(), options, 0);
         bArr = new Button[1];
         bArr[0] = new Button(405, 440, 232, 121);
         warning.setB(bArr);
 
+        // Actually adds buttons and screens
         bArr = new Button[4];
         b = new Button(1, 142, 443, 113);
         bArr[0] = b;
@@ -87,20 +94,20 @@ public class ClockProblem implements KeyListener, MouseListener, ActionListener 
 
         s = new Screen[4];
         s[0] = minutes;
-        s[1] = seconds;
+        s[1] = difference;
         s[2] = overlap;
         s[3] = warning;
         options.setS(s);
-
+        // Inits spider screen after warning as well as corresponding buttons
         Screen spider = new Screen(1, new ImageIcon("Resources/input3.png").getImage(), warning, 5);
         s = new Screen[1];
         s[0] = spider;
         warning.setS(s);
         bArr = new Button[1];
-        b = new Button(521, 560, 181, 50);
-        bArr[0] = b;
-        spider.setB(bArr);
+        bArr[0] = new Button(351, 519, 261, 74);
 
+        spider.setB(bArr);
+        // Inits every clock4
         Screen trial = new Screen(0, new ImageIcon("Resources/TrialClock.png").getImage(), minutes, 0, true);
         s = new Screen[1];
         s[0] = trial;
@@ -117,9 +124,9 @@ public class ClockProblem implements KeyListener, MouseListener, ActionListener 
         s[0] = spiderTrial;
         spider.setS(s);
 
-
     }
 
+    // Returns true if the Input is long enough
     public boolean checkInput() {
         if (input.length() == currentScreen.getInputArgs() * 2) {
             return true;
@@ -130,25 +137,18 @@ public class ClockProblem implements KeyListener, MouseListener, ActionListener 
     @Override
     public void keyTyped(KeyEvent e) {
 
+        // Ignores typing of not on a page that needs typing
         if (currentScreen.getInputArgs() == 0) {
-            System.out.println("wrong screen");
             return;
         }
-
-
+        // If you have have typed more than neccesary
         if (input.length() >= currentScreen.getInputArgs() * 2) {
-            System.out.println("overboard");
-            window.repaint();
             return;
-
         }
-
+        // If a number is typed add it to the end
         if (isNumber(e.getKeyChar())) {
             input += e.getKeyChar();
-        } else {
-            System.out.println("monkey");
         }
-        System.out.println(input.length());
         window.repaint();
 
     }
@@ -160,7 +160,8 @@ public class ClockProblem implements KeyListener, MouseListener, ActionListener 
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE && input.length() > 0 && (currentScreen.getParent() == root.getS()[0] || root.getS()[0].getS()[3] == currentScreen.getParent())){
+        // Handles deletion
+        if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE && input.length() > 0 && (currentScreen.getParent() == root.getS()[0] || root.getS()[0].getS()[3] == currentScreen.getParent())) {
             System.out.println("deleted");
             input = input.substring(0, input.length() - 1);
             window.repaint();
@@ -174,31 +175,29 @@ public class ClockProblem implements KeyListener, MouseListener, ActionListener 
 
     @Override
     public void mousePressed(MouseEvent e) {
-        System.out.println("stuff");
 
+        // Handles going back a screen
         if (UNDO.isClicked(e.getX(), e.getY()) && currentScreen != root) {
+            // If an input screen, reset
             if (currentScreen.getParent() == root.getS()[0] || root.getS()[0].getS()[3] == currentScreen.getParent())
                 input = "";
+            // Go back a screen
             currentScreen = currentScreen.getParent();
             window.repaint();
             return;
         }
-
+        // If on an input screeb
         if (currentScreen.getParent() == root.getS()[0] || root.getS()[0].getS()[3] == currentScreen.getParent()) {
+            // If the button is clicked
             if (currentScreen.getB()[0].isClicked(e.getX(), e.getY()) && checkInput()) {
+                // Change screens and repaint
                 currentScreen = currentScreen.getS()[0];
                 window.repaint();
                 return;
             }
         }
-        if (currentScreen.isLeaf() && UNDO.isClicked(e.getX(), e.getY())) {
-
-            return;
-        }
-        if (currentScreen.isLeaf()) {
-            return;
-        }
-
+        if (currentScreen.isLeaf()) return;
+        // For every button check if its clicked and then progress to that screen
         for (int i = 0; i < currentScreen.getB().length; i++) {
             if (currentScreen.getB()[i].isClicked(e.getX(), e.getY())) {
                 currentScreen = currentScreen.getS()[i];
@@ -222,7 +221,7 @@ public class ClockProblem implements KeyListener, MouseListener, ActionListener 
     public void mouseExited(MouseEvent e) {
 
     }
-
+    // Checks if a char is a digit
     public boolean isNumber(char c) {
         String s = "" + c;
         for (int i = 0; i < 10; i++) {
@@ -242,16 +241,22 @@ public class ClockProblem implements KeyListener, MouseListener, ActionListener 
         this.input = input;
     }
 
+    // Makes the correct clock depening on the problem type which is determined by the screen
     public Clock makeClock() {
 
         if (currentScreen == root.getS()[0].getS()[3].getS()[0].getS()[0])
             return new Clock(Integer.parseInt(input.substring(0, 2)), Integer.parseInt(input.substring(2, 4)), Integer.parseInt(input.substring(4, 6)), Integer.parseInt(input.substring(6, 8)), Integer.parseInt(input.substring(8, 10)));
-        return new Clock(Integer.parseInt(input.substring(0, 2)), Integer.parseInt(input.substring(2, 4)), Integer.parseInt(input.substring(4, 6)), Integer.parseInt(input.substring(6, 8)));
-    }
+        else if (currentScreen == root.getS()[0].getS()[1].getS()[0])
+            return new Clock(Integer.parseInt(input.substring(0, 2)), Integer.parseInt(input.substring(2, 4)), Integer.parseInt(input.substring(4, 6)), Integer.parseInt(input.substring(6, 8)), input.substring(8, 10));
 
+        return new Clock(Integer.parseInt(input.substring(0, 2)), Integer.parseInt(input.substring(2, 4)), Integer.parseInt(input.substring(4, 6)), Integer.parseInt(input.substring(6, 8)));
+
+    }
+    // Returns the answers to the specified problem
     public double getVal(Clock c) {
 
         if (currentScreen == root.getS()[0].getS()[0].getS()[0]) {
+            c.setDegrees(true);
             return c.getInbetweenMins();
         }
         if (currentScreen == root.getS()[0].getS()[2].getS()[0]) {
@@ -260,20 +265,16 @@ public class ClockProblem implements KeyListener, MouseListener, ActionListener 
         if (currentScreen == root.getS()[0].getS()[3].getS()[0].getS()[0]) {
             return c.getSpider();
         }
-        if (currentScreen == root.getS()[0].getS()[1].getS()[0].getS()[0]) {
+        if (currentScreen == root.getS()[0].getS()[1].getS()[0]) {
             return c.degrees();
         }
         return 0;
     }
-
 
     public static void main(String[] args) {
         ClockProblem c = new ClockProblem();
 
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        window.repaint();
-    }
+
 }

@@ -4,9 +4,7 @@ public class Button {
 
     private int x, y, width, height;
 
-
-    public Button(int x, int y, int width, int height ) {
-
+    public Button(int x, int y, int width, int height) {
 
         this.x = x;
         this.y = y;
